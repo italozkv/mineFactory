@@ -35,7 +35,15 @@ function formFromProject(project) {
     ...project,
     category_id: project.category_id || '',
     tag_ids: project.project_tags?.map((item) => item.tags?.id).filter(Boolean) || [],
-    external_links: project.external_links || [],
+    name: project.name || '',
+    slug: project.slug || '',
+    short_description: project.short_description || '',
+    description: project.description || '',
+    logo_url: project.logo_url || '',
+    banner_url: project.banner_url || '',
+    minecraft_versions: project.minecraft_versions || [],
+    loaders: project.loaders || [],
+    external_links: Array.isArray(project.external_links) ? project.external_links : [],
   };
 }
 
@@ -96,7 +104,7 @@ export default function AdminProjectForm() {
   function updateExternalLink(index, key, value) {
     setForm((current) => ({
       ...current,
-      external_links: current.external_links.map((link, linkIndex) =>
+      external_links: (Array.isArray(current.external_links) ? current.external_links : []).map((link, linkIndex) =>
         linkIndex === index ? { ...link, [key]: value } : link,
       ),
     }));
@@ -110,10 +118,12 @@ export default function AdminProjectForm() {
   }
 
   function removeExternalLink(index) {
-    setForm((current) => ({
-      ...current,
-      external_links: current.external_links.filter((_, linkIndex) => linkIndex !== index),
-    }));
+      setForm((current) => ({
+        ...current,
+        external_links: (Array.isArray(current.external_links) ? current.external_links : []).filter(
+          (_, linkIndex) => linkIndex !== index,
+        ),
+      }));
   }
 
   function validate() {

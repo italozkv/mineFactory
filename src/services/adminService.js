@@ -8,23 +8,43 @@ const PROJECT_SELECT = `
   project_tags(tags(id, name, slug, color))
 `;
 
+function textValue(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function arrayValue(value) {
+  return Array.isArray(value) ? value : [];
+}
+
 function normalizePayload(payload) {
   const merged = { ...DEFAULT_PROJECT_FORM, ...payload };
+  const name = textValue(merged.name);
+  const slugSource = textValue(merged.slug) || name;
+  const shortDescription = textValue(merged.short_description);
+  const description = textValue(merged.description);
+  const logoUrl = textValue(merged.logo_url);
+  const bannerUrl = textValue(merged.banner_url);
+  const externalLinks = arrayValue(merged.external_links);
 
   return {
-    name: merged.name.trim(),
-    slug: slugify(merged.slug || merged.name),
-    short_description: merged.short_description.trim(),
-    description: merged.description.trim(),
-    logo_url: merged.logo_url.trim() || null,
-    banner_url: merged.banner_url.trim() || null,
+    name,
+    slug: slugify(slugSource),
+    short_description: shortDescription,
+    description,
+    logo_url: logoUrl || null,
+    banner_url: bannerUrl || null,
     status: merged.status,
     category_id: merged.category_id || null,
-    minecraft_versions: merged.minecraft_versions,
-    loaders: merged.loaders,
+    minecraft_versions: arrayValue(merged.minecraft_versions),
+    loaders: arrayValue(merged.loaders),
     visibility: merged.visibility,
     is_published: Boolean(merged.is_published),
-    external_links: merged.external_links.filter((link) => link.label?.trim() && link.url?.trim()),
+    external_links: externalLinks
+      .map((link) => ({
+        label: textValue(link?.label),
+        url: textValue(link?.url),
+      }))
+      .filter((link) => link.label.length > 0 && link.url.length > 0),
   };
 }
 
@@ -167,7 +187,7 @@ export async function listCategoriesWithCounts() {
 export async function createCategory(payload) {
   const { data, error } = await supabase
     .from('categories')
-    .insert({ name: payload.name.trim(), slug: slugify(payload.slug || payload.name) })
+    .insert({ name: textValue(payload.name), slug: slugify(textValue(payload.slug) || textValue(payload.name)) })
     .select()
     .single();
 
@@ -178,7 +198,7 @@ export async function createCategory(payload) {
 export async function updateCategory(id, payload) {
   const { data, error } = await supabase
     .from('categories')
-    .update({ name: payload.name.trim(), slug: slugify(payload.slug || payload.name) })
+    .update({ name: textValue(payload.name), slug: slugify(textValue(payload.slug) || textValue(payload.name)) })
     .eq('id', id)
     .select()
     .single();
@@ -229,9 +249,9 @@ export async function createTag(payload) {
   const { data, error } = await supabase
     .from('tags')
     .insert({
-      name: payload.name.trim(),
-      slug: slugify(payload.slug || payload.name),
-      color: payload.color || '#22c55e',
+      name: textValue(payload.name),
+      slug: slugify(textValue(payload.slug) || textValue(payload.name)),
+      color: textValue(payload.color) || '#22c55e',
     })
     .select()
     .single();
@@ -244,9 +264,9 @@ export async function updateTag(id, payload) {
   const { data, error } = await supabase
     .from('tags')
     .update({
-      name: payload.name.trim(),
-      slug: slugify(payload.slug || payload.name),
-      color: payload.color || '#22c55e',
+      name: textValue(payload.name),
+      slug: slugify(textValue(payload.slug) || textValue(payload.name)),
+      color: textValue(payload.color) || '#22c55e',
     })
     .eq('id', id)
     .select()
