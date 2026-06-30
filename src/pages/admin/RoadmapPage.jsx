@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { Import, Plus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import AdminCard from '../../components/admin/AdminCard.jsx';
 import AdminLayout from '../../components/admin/AdminLayout.jsx';
@@ -7,9 +7,10 @@ import { TableSkeleton } from '../../components/admin/Skeleton.jsx';
 import { useToast } from '../../components/admin/ToastProvider.jsx';
 import RoadmapBoard from '../../components/admin/roadmap/RoadmapBoard.jsx';
 import RoadmapFilters from '../../components/admin/roadmap/RoadmapFilters.jsx';
+import RoadmapImportModal from '../../components/admin/roadmap/RoadmapImportModal.jsx';
 import RoadmapFormModal from '../../components/admin/roadmap/RoadmapFormModal.jsx';
 import RoadmapStats from '../../components/admin/roadmap/RoadmapStats.jsx';
-import { listProjectsForSelect, listRoadmapItems, createRoadmapItem, updateRoadmapItem, deleteRoadmapItem, moveRoadmapItem } from '../../services/roadmapService.js';
+import { importRoadmapItems, listProjectsForSelect, listRoadmapItems, createRoadmapItem, updateRoadmapItem, deleteRoadmapItem, moveRoadmapItem } from '../../services/roadmapService.js';
 import { ROADMAP_STATUS_ORDER } from '../../utils/roadmapUtils.js';
 
 const EMPTY_FILTERS = {
@@ -39,6 +40,7 @@ export default function RoadmapPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [confirm, setConfirm] = useState(null);
 
@@ -140,14 +142,24 @@ export default function RoadmapPage() {
       title="Roadmap"
       subtitle="Organize o desenvolvimento dos seus projetos."
       actions={
-        <button
-          type="button"
-          onClick={openCreate}
-          className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-zinc-950 transition-colors hover:bg-emerald-400"
-        >
-          <Plus size={17} />
-          Nova Tarefa
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={() => setImportOpen(true)}
+            className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <Import size={17} />
+            Importar Roadmap
+          </button>
+          <button
+            type="button"
+            onClick={openCreate}
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-zinc-950 transition-colors hover:bg-emerald-400"
+          >
+            <Plus size={17} />
+            Nova Tarefa
+          </button>
+        </>
       }
     >
       <RoadmapStats stats={stats} />
@@ -184,6 +196,22 @@ export default function RoadmapPage() {
           setSelectedItem(null);
         }}
         onSave={handleSave}
+      />
+
+      <RoadmapImportModal
+        open={importOpen}
+        loading={saving}
+        onClose={() => setImportOpen(false)}
+        onImport={async (items) => {
+          setSaving(true);
+          try {
+            const result = await importRoadmapItems(items);
+            await loadData(filters);
+            return result;
+          } finally {
+            setSaving(false);
+          }
+        }}
       />
 
       <ConfirmDialog

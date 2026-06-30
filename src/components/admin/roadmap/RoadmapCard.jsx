@@ -13,12 +13,12 @@ export default function RoadmapCard({ item, onEdit, onDelete, onMove }) {
   const priorityOption = getRoadmapPriorityOption(item.priority);
 
   return (
-    <article className="grid gap-4 rounded-lg border border-white/10 bg-zinc-950/50 p-4 shadow-lg shadow-black/10 transition-colors hover:border-emerald-400/20">
-      <div className="grid gap-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="truncate text-sm font-bold text-white">{item.title}</h3>
-            {item.project ? <p className="mt-1 truncate text-xs text-zinc-500">{item.project.name}</p> : null}
+    <article className="grid min-w-0 gap-4 rounded-lg border border-white/10 bg-zinc-950/50 p-4 shadow-lg shadow-black/10 transition-colors hover:border-emerald-400/20">
+      <div className="grid min-w-0 gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h3 className="break-words text-sm font-bold text-white">{item.title}</h3>
+            {item.project ? <p className="mt-1 break-words text-xs text-zinc-500">{item.project.name}</p> : null}
           </div>
           <span className={`shrink-0 rounded-lg border px-2.5 py-1 text-xs font-semibold ${statusOption.color}`}>
             {statusOption.label}
@@ -35,19 +35,19 @@ export default function RoadmapCard({ item, onEdit, onDelete, onMove }) {
           ) : null}
         </div>
 
-        <div className="grid gap-2 text-xs text-zinc-400">
+        <div className="grid gap-2 text-xs text-zinc-400 break-words">
           {item.target_version ? <p>Versao prevista: {item.target_version}</p> : null}
           <p>Criado em: {formatDate(item.created_at)}</p>
         </div>
       </div>
 
-      <div className="grid gap-2">
+      <div className="grid gap-2 min-w-0">
         <label className="grid gap-1">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Mover status</span>
           <select
             value={item.status}
             onChange={(event) => onMove(item.id, event.target.value)}
-            className="h-9 rounded-lg border border-white/10 bg-zinc-900/80 px-3 text-xs text-white outline-none transition-colors focus:border-emerald-400/60"
+            className="h-9 w-full rounded-lg border border-white/10 bg-zinc-900/80 px-3 text-xs text-white outline-none transition-colors focus:border-emerald-400/60"
           >
             {ROADMAP_STATUS_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -57,7 +57,7 @@ export default function RoadmapCard({ item, onEdit, onDelete, onMove }) {
           </select>
         </label>
 
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <button
             type="button"
             onClick={() => onEdit(item)}

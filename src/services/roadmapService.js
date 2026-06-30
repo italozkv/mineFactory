@@ -8,6 +8,7 @@ import {
   isValidRoadmapType,
   normalizeRoadmapItem,
   textValue,
+  normalizeRoadmapImportItem,
 } from '../utils/roadmapUtils.js';
 
 function buildStatusTimestamps(status, previous = {}) {
@@ -141,4 +142,48 @@ export function groupRoadmapItemsByStatus(items) {
     acc[status] = items.filter((item) => item.status === status);
     return acc;
   }, {});
+}
+
+export async function importRoadmapItems(items) {
+  const projectOptions = await listProjectsForSelect();
+  const normalizedItems = Array.isArray(items) ? items.map(normalizeRoadmapImportItem) : [];
+  const projectLookup = new Map(projectOptions.map((project) => [project.name.trim().toLowerCase(), project]));
+  const warnings = [];
+  const payloads = normalizedItems.map((item, index) => {
+    let projectId = null;
+
+    if (item.project) {
+      const matchedProject = projectLookup.get(item.project.toLowerCase());
+      if (matchedProject) {
+        projectId = matchedProject.id;
+      } else {
+        warnings.push(`Item ${index + 1}: projeto "${item.project}" nao encontrado.`);
+      }
+    }
+
+    return {
+      project_id: projectId,
+      title: item.title,
+      description: item.description,
+      status: isValidRoadmapStatus(item.status) ? item.status : 'planned',
+      priority: isValidRoadmapPriority(item.priority) ? item.priority : 'medium',
+      type: isValidRoadmapType(item.type) ? item.type : 'feature',
+      category: item.category,
+      target_version: item.target_version,
+      is_public: Boolean(item.is_public),
+    };
+  });
+
+  const validPayloads = payloads.filter((item) => item.title);
+  if (validPayloads.length === 0) {
+    throw new Error('Nenhuma tarefa valida para importar.');
+  }
+
+  const { data, error } = await supabase.from('roadmap_items').insert(validPayloads).select('id');
+  if (error) throw error;
+
+  return {
+    createdCount: data?.length || 0,
+    warnings,
+  };
 }

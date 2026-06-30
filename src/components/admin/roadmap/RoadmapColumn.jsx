@@ -3,7 +3,7 @@ import RoadmapCard from './RoadmapCard.jsx';
 
 export default function RoadmapColumn({ title, count, items, onEdit, onDelete, onMove }) {
   return (
-    <AdminCard className="flex min-h-[320px] flex-col p-4">
+    <AdminCard className="flex min-w-0 min-h-[320px] flex-col p-4">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-bold text-white">{title}</h2>
@@ -11,7 +11,7 @@ export default function RoadmapColumn({ title, count, items, onEdit, onDelete, o
         </div>
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid gap-3 min-w-0">
         {items.length > 0 ? (
           items.map((item) => (
             <RoadmapCard key={item.id} item={item} onEdit={onEdit} onDelete={onDelete} onMove={onMove} />

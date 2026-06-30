@@ -6,8 +6,8 @@ import { ROADMAP_CATEGORY_SUGGESTIONS, ROADMAP_PRIORITY_OPTIONS, ROADMAP_STATUS_
 export default function RoadmapFilters({ projects, filters, onChange, onClear }) {
   return (
     <AdminCard className="p-4">
-      <div className="grid gap-4 xl:grid-cols-6">
-        <div className="xl:col-span-2">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="sm:col-span-2 xl:col-span-2">
           <Field label="Pesquisar por titulo">
             <AdminSearchBar value={filters.search} onChange={(value) => onChange('search', value)} placeholder="Buscar tarefa..." />
           </Field>
@@ -53,12 +53,7 @@ export default function RoadmapFilters({ projects, filters, onChange, onClear })
           </SelectInput>
         </Field>
         <Field label="Categoria">
-          <TextInput
-            list="roadmap-categories"
-            value={filters.category}
-            onChange={(event) => onChange('category', event.target.value)}
-            placeholder="Gameplay"
-          />
+          <TextInput list="roadmap-categories" value={filters.category} onChange={(event) => onChange('category', event.target.value)} placeholder="Gameplay" />
           <datalist id="roadmap-categories">
             {ROADMAP_CATEGORY_SUGGESTIONS.map((category) => (
               <option key={category} value={category} />

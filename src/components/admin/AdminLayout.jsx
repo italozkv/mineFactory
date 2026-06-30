@@ -106,9 +106,9 @@ export default function AdminLayout({ title, subtitle, actions, children }) {
         </div>
       </aside>
 
-      <div className="lg:pl-72">
+      <div className="min-w-0 lg:pl-72">
         <header className="sticky top-0 z-30 border-b border-white/10 bg-zinc-950/82 backdrop-blur-xl">
-          <div className="content-wrap flex min-h-20 flex-col justify-center gap-4 py-4 lg:w-auto lg:px-8">
+          <div className="content-wrap flex min-h-20 min-w-0 flex-col justify-center gap-4 py-4 lg:w-auto lg:px-8">
             <div className="flex flex-col justify-between gap-4 xl:flex-row xl:items-center">
               <div>
                 <p className="text-sm font-semibold text-emerald-300">MineFactory Admin</p>
@@ -141,7 +141,7 @@ export default function AdminLayout({ title, subtitle, actions, children }) {
           </div>
         </header>
 
-        <main className="content-wrap grid gap-6 py-8 lg:w-auto lg:px-8">{children}</main>
+        <main className="content-wrap grid min-w-0 gap-6 py-8 lg:w-auto lg:px-8">{children}</main>
       </div>
     </section>
   );

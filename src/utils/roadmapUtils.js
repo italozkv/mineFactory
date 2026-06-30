@@ -126,3 +126,48 @@ export function roadmapFormFromItem(item) {
     is_public: Boolean(item.is_public),
   };
 }
+
+export const ROADMAP_IMPORT_TEMPLATE = `[
+  {
+    "title": "Nova funcionalidade",
+    "description": "Descricao opcional",
+    "project": "Nome do projeto opcional",
+    "status": "planned",
+    "priority": "high",
+    "type": "feature",
+    "category": "Gameplay",
+    "target_version": "0.1.0",
+    "is_public": false
+  }
+]`;
+
+export function normalizeRoadmapImportItem(item) {
+  const status = isValidRoadmapStatus(item?.status) ? item.status : 'planned';
+  const priority = isValidRoadmapPriority(item?.priority) ? item.priority : 'medium';
+  const type = isValidRoadmapType(item?.type) ? item.type : 'feature';
+
+  return {
+    title: textValue(item?.title),
+    description: textValue(item?.description) || null,
+    project: textValue(item?.project) || '',
+    status,
+    priority,
+    type,
+    category: textValue(item?.category) || null,
+    target_version: textValue(item?.target_version) || null,
+    is_public: Boolean(item?.is_public),
+  };
+}
+
+export function validateRoadmapImportItems(items) {
+  const normalizedItems = Array.isArray(items) ? items.map(normalizeRoadmapImportItem) : [];
+  const errors = [];
+
+  normalizedItems.forEach((item, index) => {
+    if (!item.title) {
+      errors.push(`Item ${index + 1}: title e obrigatorio.`);
+    }
+  });
+
+  return { items: normalizedItems, errors };
+}
