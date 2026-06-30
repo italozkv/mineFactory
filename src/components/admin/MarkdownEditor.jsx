@@ -29,10 +29,10 @@ export default function MarkdownEditor({ value, onChange }) {
             value={value}
             onChange={(event) => onChange(event.target.value)}
             placeholder="Use Markdown para organizar a ficha do mod..."
-            className="min-h-56 rounded-none border-0 bg-transparent focus:ring-0"
+            className="min-h-[420px] resize-y rounded-none border-0 bg-transparent focus:ring-0"
           />
         ) : (
-          <div className="min-h-56 whitespace-pre-wrap px-4 py-3 text-sm leading-7 text-zinc-300">
+          <div className="min-h-[420px] whitespace-pre-wrap px-4 py-4 text-sm leading-7 text-zinc-300">
             {value || 'Nada para visualizar ainda.'}
           </div>
         )}

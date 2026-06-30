@@ -17,7 +17,7 @@ export function TextInput(props) {
     <input
       {...props}
       className={cn(
-        'h-11 rounded-lg border border-white/10 bg-zinc-950/60 px-3 text-sm text-white outline-none transition-all placeholder:text-zinc-600 focus:border-emerald-400/60 focus:ring-4 focus:ring-emerald-500/10 disabled:opacity-60',
+        'h-11 w-full rounded-lg border border-white/10 bg-zinc-950/60 px-3 text-sm text-white outline-none transition-all placeholder:text-zinc-600 focus:border-emerald-400/60 focus:ring-4 focus:ring-emerald-500/10 disabled:opacity-60',
         props.className,
       )}
     />
@@ -29,7 +29,7 @@ export function TextArea(props) {
     <textarea
       {...props}
       className={cn(
-        'min-h-28 rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-3 text-sm leading-6 text-white outline-none transition-all placeholder:text-zinc-600 focus:border-emerald-400/60 focus:ring-4 focus:ring-emerald-500/10',
+        'min-h-28 w-full rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-3 text-sm leading-6 text-white outline-none transition-all placeholder:text-zinc-600 focus:border-emerald-400/60 focus:ring-4 focus:ring-emerald-500/10',
         props.className,
       )}
     />

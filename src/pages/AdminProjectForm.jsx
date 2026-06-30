@@ -203,7 +203,7 @@ export default function AdminProjectForm() {
                   value={form.short_description}
                   onChange={(event) => updateField('short_description', event.target.value)}
                   placeholder="Resumo rapido para cards e listagens."
-                  className="min-h-24"
+                  className="min-h-28"
                 />
               </Field>
 
@@ -212,11 +212,13 @@ export default function AdminProjectForm() {
                 {errors.description && <span className="mt-2 block text-xs text-rose-300">{errors.description}</span>}
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 xl:grid-cols-2">
                 <UploadField
                   label="Logo"
                   value={form.logo_url}
                   folder="logos"
+                  aspectClass="aspect-square"
+                  imageClassName="object-contain p-4"
                   onChange={(value) => updateField('logo_url', value)}
                   onError={(message) => showToast({ type: 'error', title: 'Upload nao concluido', description: message })}
                 />
@@ -224,6 +226,8 @@ export default function AdminProjectForm() {
                   label="Banner"
                   value={form.banner_url}
                   folder="banners"
+                  aspectClass="aspect-[16/9]"
+                  imageClassName="object-cover"
                   onChange={(value) => updateField('banner_url', value)}
                   onError={(message) => showToast({ type: 'error', title: 'Upload nao concluido', description: message })}
                 />
