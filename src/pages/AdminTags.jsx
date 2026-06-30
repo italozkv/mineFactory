@@ -168,16 +168,6 @@ export default function AdminTags() {
     <AdminLayout
       title="Tags"
       subtitle="Use cores para diferenciar tecnologias, temas e estados editoriais dos mods."
-      actions={
-        <button
-          type="button"
-          onClick={openNew}
-          className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-zinc-950 transition-colors hover:bg-emerald-400"
-        >
-          <Plus size={17} />
-          Nova Tag
-        </button>
-      }
     >
       <AdminCard className="p-5">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
