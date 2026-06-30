@@ -1,10 +1,11 @@
-import { BarChart3, FolderTree, LayoutDashboard, LogOut, Package, Plus, Tags } from 'lucide-react';
+import { BarChart3, FolderTree, Kanban, LayoutDashboard, LogOut, Package, Plus, Tags } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient.js';
 
 const NAV_ITEMS = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Roadmap', to: '/admin/roadmap', icon: Kanban },
   { label: 'Projetos', to: '/admin/projects', icon: Package },
   { label: 'Novo Projeto', to: '/admin/projects/new', icon: Plus },
   { label: 'Categorias', to: '/admin/projects/categories', icon: FolderTree },

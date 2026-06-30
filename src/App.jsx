@@ -15,6 +15,7 @@ import AdminCategories from './pages/AdminCategories.jsx';
 import AdminTags from './pages/AdminTags.jsx';
 import PublicProjects from './pages/PublicProjects.jsx';
 import PublicProjectPage from './pages/PublicProjectPage.jsx';
+import RoadmapPage from './pages/admin/RoadmapPage.jsx';
 
 export default function App() {
   const { theme } = useTheme();
@@ -87,6 +88,14 @@ export default function App() {
               element={
                 <ProtectedAdminRoute>
                   <AdminTags />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="/admin/roadmap"
+              element={
+                <ProtectedAdminRoute>
+                  <RoadmapPage />
                 </ProtectedAdminRoute>
               }
             />
