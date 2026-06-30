@@ -7,6 +7,7 @@ import DataTable from '../components/admin/DataTable.jsx';
 import { Field, TextInput } from '../components/admin/FormControls.jsx';
 import Modal from '../components/admin/Modal.jsx';
 import { useToast } from '../components/admin/ToastProvider.jsx';
+import { DEFAULT_CATEGORY_PRESETS } from '../constants/projects.js';
 import {
   createCategory,
   deleteCategory,
@@ -90,6 +91,45 @@ export default function AdminCategories() {
     }
   }
 
+  async function createPresetCategory(preset) {
+    const exists = categories.some((category) => category.slug === preset.slug);
+    if (exists) {
+      showToast({ title: `A categoria "${preset.name}" ja existe.` });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await createCategory(preset);
+      showToast({ title: `Categoria "${preset.name}" criada.` });
+      await loadCategories();
+    } catch (error) {
+      showToast({ type: 'error', title: 'Nao foi possivel criar', description: error.message });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function createAllPresetCategories() {
+    setSaving(true);
+    try {
+      const existing = new Set(categories.map((category) => category.slug));
+      const pending = DEFAULT_CATEGORY_PRESETS.filter((preset) => !existing.has(preset.slug));
+      if (pending.length === 0) {
+        showToast({ title: 'Todas as categorias padrao ja existem.' });
+        return;
+      }
+
+      await Promise.all(pending.map((preset) => createCategory(preset)));
+      showToast({ title: 'Categorias padrao criadas.' });
+      await loadCategories();
+    } catch (error) {
+      showToast({ type: 'error', title: 'Nao foi possivel criar as categorias padrao', description: error.message });
+    } finally {
+      setSaving(false);
+    }
+  }
+
   const columns = [
     { key: 'name', header: 'Nome', render: (category) => <span className="font-semibold text-white">{category.name}</span> },
     { key: 'slug', header: 'Slug', render: (category) => <span className="text-zinc-400">{category.slug}</span> },
@@ -136,6 +176,48 @@ export default function AdminCategories() {
         </button>
       }
     >
+      <AdminCard className="p-5">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-white">Categorias padrao</h2>
+            <p className="mt-1 text-sm text-zinc-500">Crie a base comum de categorias e depois adicione outras livremente.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={createAllPresetCategories}
+              disabled={saving}
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/50 px-3 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 disabled:opacity-50"
+            >
+              <FolderPlus size={15} />
+              Criar todas
+            </button>
+            <button
+              type="button"
+              onClick={openNew}
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-zinc-950 transition-colors hover:bg-emerald-400"
+            >
+              <FolderPlus size={17} />
+              Nova Categoria
+            </button>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {DEFAULT_CATEGORY_PRESETS.map((preset) => (
+            <button
+              key={preset.slug}
+              type="button"
+              onClick={() => createPresetCategory(preset)}
+              disabled={saving}
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/50 px-3 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 disabled:opacity-50"
+            >
+              <FolderPlus size={15} />
+              {preset.name}
+            </button>
+          ))}
+        </div>
+      </AdminCard>
+
       <AdminCard className="p-4">
         <DataTable columns={columns} rows={categories} loading={loading} getRowKey={(category) => category.id} />
       </AdminCard>

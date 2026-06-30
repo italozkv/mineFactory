@@ -9,6 +9,7 @@ import Modal from '../components/admin/Modal.jsx';
 import { useToast } from '../components/admin/ToastProvider.jsx';
 import { createTag, deleteTag, listTagsWithCounts, updateTag } from '../services/adminService.js';
 import { slugify } from '../utils/formatters.js';
+import { DEFAULT_TAG_PRESETS } from '../constants/projects.js';
 
 const EMPTY_FORM = { name: '', slug: '', color: '#22c55e' };
 
@@ -85,6 +86,45 @@ export default function AdminTags() {
     }
   }
 
+  async function createPresetTag(preset) {
+    const exists = tags.some((tag) => tag.slug === preset.slug);
+    if (exists) {
+      showToast({ title: `A tag "${preset.name}" ja existe.` });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await createTag(preset);
+      showToast({ title: `Tag "${preset.name}" criada.` });
+      await loadTags();
+    } catch (error) {
+      showToast({ type: 'error', title: 'Nao foi possivel criar', description: error.message });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function createAllPresetTags() {
+    setSaving(true);
+    try {
+      const existing = new Set(tags.map((tag) => tag.slug));
+      const pending = DEFAULT_TAG_PRESETS.filter((preset) => !existing.has(preset.slug));
+      if (pending.length === 0) {
+        showToast({ title: 'Todas as tags padrao ja existem.' });
+        return;
+      }
+
+      await Promise.all(pending.map((preset) => createTag(preset)));
+      showToast({ title: 'Tags padrao criadas.' });
+      await loadTags();
+    } catch (error) {
+      showToast({ type: 'error', title: 'Nao foi possivel criar as tags padrao', description: error.message });
+    } finally {
+      setSaving(false);
+    }
+  }
+
   const columns = [
     { key: 'name', header: 'Nome', render: (tag) => <span className="font-semibold text-white">{tag.name}</span> },
     {
@@ -139,6 +179,49 @@ export default function AdminTags() {
         </button>
       }
     >
+      <AdminCard className="p-5">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-white">Tags padrao</h2>
+            <p className="mt-1 text-sm text-zinc-500">Crie rapidamente as tags mais usadas em mods e projetos.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={createAllPresetTags}
+              disabled={saving}
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/50 px-3 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 disabled:opacity-50"
+            >
+              <Plus size={15} />
+              Criar todas
+            </button>
+            <button
+              type="button"
+              onClick={openNew}
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-zinc-950 transition-colors hover:bg-emerald-400"
+            >
+              <Plus size={17} />
+              Nova Tag
+            </button>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {DEFAULT_TAG_PRESETS.map((preset) => (
+            <button
+              key={preset.slug}
+              type="button"
+              onClick={() => createPresetTag(preset)}
+              disabled={saving}
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/50 px-3 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 disabled:opacity-50"
+              style={{ boxShadow: `inset 0 0 0 1px ${preset.color}22` }}
+            >
+              <span className="size-2.5 rounded-full" style={{ background: preset.color }} />
+              {preset.name}
+            </button>
+          ))}
+        </div>
+      </AdminCard>
+
       <AdminCard className="p-4">
         <DataTable columns={columns} rows={tags} loading={loading} getRowKey={(tag) => tag.id} />
       </AdminCard>

@@ -28,6 +28,29 @@ export const VISIBILITIES = [
   { value: 'private', label: 'Privado' },
 ];
 
+export const DEFAULT_CATEGORY_PRESETS = [
+  { name: 'Utility', slug: 'utility' },
+  { name: 'Magic', slug: 'magic' },
+  { name: 'Adventure', slug: 'adventure' },
+  { name: 'Technology', slug: 'technology' },
+  { name: 'Library', slug: 'library' },
+  { name: 'QoL', slug: 'qol' },
+  { name: 'API', slug: 'api' },
+  { name: 'WorldGen', slug: 'worldgen' },
+];
+
+export const DEFAULT_TAG_PRESETS = [
+  { name: 'Magic', slug: 'magic', color: '#8b5cf6' },
+  { name: 'Performance', slug: 'performance', color: '#14b8a6' },
+  { name: 'PvP', slug: 'pvp', color: '#f97316' },
+  { name: 'RPG', slug: 'rpg', color: '#ec4899' },
+  { name: 'Optimization', slug: 'optimization', color: '#22c55e' },
+  { name: 'Server', slug: 'server', color: '#3b82f6' },
+  { name: 'Client', slug: 'client', color: '#a855f7' },
+  { name: 'Forge', slug: 'forge', color: '#ef4444' },
+  { name: 'Fabric', slug: 'fabric', color: '#06b6d4' },
+];
+
 export const DEFAULT_PROJECT_FORM = {
   name: '',
   slug: '',
