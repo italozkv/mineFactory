@@ -1,0 +1,147 @@
+[
+  {
+    "id": "arcane-engineering",
+    "name": "Arcane Engineering",
+    "shortDescription": "Máquinas, energia e magia em um pacote leve para progressão técnica.",
+    "description": "Arcane Engineering adiciona geradores, cabos, blocos de automação e altares arcanos para quem gosta de misturar tecnologia com magia sem transformar o modpack em algo pesado.",
+    "minecraftVersions": ["1.21.1", "1.20.1"],
+    "loaders": ["NeoForge", "Forge"],
+    "categories": ["Tecnologia", "Magia", "Automação"],
+    "banner": "/images/arcane-engineering-banner.png",
+    "gallery": [
+      "/images/arcane-engineering-gallery-1.png",
+      "/images/mods-hero.png"
+    ],
+    "downloads": [
+      {
+        "version": "1.2.0",
+        "minecraftVersion": "1.21.1",
+        "loader": "NeoForge",
+        "file": "/downloads/arcane-engineering-1.2.0-neoforge.jar"
+      },
+      {
+        "version": "1.1.4",
+        "minecraftVersion": "1.20.1",
+        "loader": "Forge",
+        "file": "/downloads/arcane-engineering-1.1.4-forge.jar"
+      }
+    ],
+    "dependencies": [
+      {
+        "name": "Architectury API",
+        "required": true,
+        "url": "https://modrinth.com/mod/architectury-api"
+      },
+      {
+        "name": "JEI",
+        "required": false,
+        "url": "https://modrinth.com/mod/jei"
+      }
+    ],
+    "changelog": [
+      {
+        "version": "1.2.0",
+        "date": "2026-06-10",
+        "changes": [
+          "Adicionado gerador de cristal.",
+          "Melhorado consumo de energia das máquinas.",
+          "Corrigida sincronização dos altares em servidores."
+        ]
+      },
+      {
+        "version": "1.1.4",
+        "date": "2026-05-18",
+        "changes": [
+          "Compatibilidade com Forge 1.20.1.",
+          "Ajustes visuais em blocos técnicos."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "biome-expansion",
+    "name": "Biome Expansion",
+    "shortDescription": "Novos biomas, blocos decorativos e estruturas para exploração.",
+    "description": "Biome Expansion deixa o mundo mais variado com florestas luminosas, cavernas úmidas, ruínas pequenas e blocos decorativos pensados para construção e exploração.",
+    "minecraftVersions": ["1.21.1", "1.20.4"],
+    "loaders": ["Fabric", "NeoForge"],
+    "categories": ["Exploração", "Biomas", "Decoração"],
+    "banner": "/images/biome-expansion-banner.png",
+    "gallery": [
+      "/images/biome-expansion-gallery-1.png",
+      "/images/mods-hero.png"
+    ],
+    "downloads": [
+      {
+        "version": "0.9.3",
+        "minecraftVersion": "1.21.1",
+        "loader": "Fabric",
+        "file": "/downloads/biome-expansion-0.9.3-fabric.jar"
+      },
+      {
+        "version": "0.9.0",
+        "minecraftVersion": "1.20.4",
+        "loader": "NeoForge",
+        "file": "/downloads/biome-expansion-0.9.0-neoforge.jar"
+      }
+    ],
+    "dependencies": [
+      {
+        "name": "Fabric API",
+        "required": true,
+        "url": "https://modrinth.com/mod/fabric-api"
+      }
+    ],
+    "changelog": [
+      {
+        "version": "0.9.3",
+        "date": "2026-06-01",
+        "changes": [
+          "Adicionado bioma Bosque de Lumen.",
+          "Reduzida frequência de estruturas próximas ao spawn.",
+          "Corrigida geração de flores raras."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "deep-mining",
+    "name": "Deep Mining",
+    "shortDescription": "Mineração expandida com ferramentas, minérios e cavernas profundas.",
+    "description": "Deep Mining adiciona camadas de mineração, minérios úteis, ferramentas especiais e pequenos desafios para jogadores que gostam de explorar o subsolo por mais tempo.",
+    "minecraftVersions": ["1.20.1"],
+    "loaders": ["Forge", "Fabric"],
+    "categories": ["Mineração", "Ferramentas", "Aventura"],
+    "banner": "/images/deep-mining-banner.png",
+    "gallery": [
+      "/images/deep-mining-gallery-1.png",
+      "/images/mods-hero.png"
+    ],
+    "downloads": [
+      {
+        "version": "2.0.1",
+        "minecraftVersion": "1.20.1",
+        "loader": "Forge",
+        "file": "/downloads/deep-mining-2.0.1-forge.jar"
+      },
+      {
+        "version": "2.0.1",
+        "minecraftVersion": "1.20.1",
+        "loader": "Fabric",
+        "file": "/downloads/deep-mining-2.0.1-fabric.jar"
+      }
+    ],
+    "dependencies": [],
+    "changelog": [
+      {
+        "version": "2.0.1",
+        "date": "2026-04-22",
+        "changes": [
+          "Nova geração de cavernas profundas.",
+          "Adicionados três minérios.",
+          "Balanceadas ferramentas avançadas."
+        ]
+      }
+    ]
+  }
+]

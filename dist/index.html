@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>MineFactory — Mods para Minecraft</title>
+    <meta
+      name="description"
+      content="MineFactory - catálogo de mods de Minecraft com versões, changelog, galeria e downloads, organizado por loader e versão."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#09090b" />
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem('minefactory-theme') || 'dark';
+          const applyTheme = () => {
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme;
+            if (document.body) {
+              document.body.dataset.theme = theme;
+              document.body.style.colorScheme = theme;
+            }
+          };
+
+          if (document.body) {
+            applyTheme();
+          } else {
+            document.addEventListener('DOMContentLoaded', applyTheme, { once: true });
+          }
+        } catch {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/minefactory-logo.png" />
+    <link rel="apple-touch-icon" href="/images/minefactory-logo.png" />
+
+    <!-- Open Graph (Discord, WhatsApp, Facebook...) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MineFactory" />
+    <meta property="og:title" content="MineFactory — Mods para Minecraft" />
+    <meta
+      property="og:description"
+      content="Catálogo de mods de Minecraft com versões, changelog, galeria e downloads, organizado por loader e versão."
+    />
+    <meta property="og:image" content="/images/minefactory-logo.png" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MineFactory — Mods para Minecraft" />
+    <meta
+      name="twitter:description"
+      content="Catálogo de mods de Minecraft com versões, changelog, galeria e downloads."
+    />
+    <meta name="twitter:image" content="/images/minefactory-logo.png" />
+
+    <!-- Fonte Inter (referenciada no CSS, mas faltava ser carregada) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/index-DbDgw0qI.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BSmxuL7O.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Você precisa habilitar o JavaScript para usar o MineFactory.</noscript>
+  </body>
+</html>

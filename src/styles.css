@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #09090b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at top left, rgba(34, 197, 94, 0.12), transparent 30rem),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 28rem),
+    #09090b;
+}
+
+html[data-theme="light"],
+body[data-theme="light"],
+.theme-light {
+  color-scheme: light;
+  background: #f7f8f2;
+}
+
+html[data-theme="light"] body,
+body[data-theme="light"],
+.theme-light body {
+  background:
+    radial-gradient(circle at top left, rgba(74, 222, 128, 0.16), transparent 28rem),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 26rem),
+    linear-gradient(180deg, #fbfcf6 0%, #eef4e7 100%);
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.content-wrap {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(24, 24, 27, 0.72);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+  transition: border-color 0.2s ease;
+}
+
+.hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 9, 11, 0.4),
+    rgba(9, 9, 11, 0.78),
+    #09090b
+  );
+}
+
+html[data-theme="light"] .hero-overlay,
+body[data-theme="light"] .hero-overlay,
+.theme-light .hero-overlay {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(247, 248, 242, 0.06),
+      rgba(247, 248, 242, 0.42),
+      rgba(247, 248, 242, 0.9)
+    );
+}
+
+html[data-theme="light"] .glass-panel,
+body[data-theme="light"] .glass-panel,
+.theme-light .glass-panel {
+  border-color: rgba(29, 47, 32, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 54px rgba(41, 58, 35, 0.1);
+}
+
+html[data-theme="light"] .bg-zinc-950,
+body[data-theme="light"] .bg-zinc-950,
+.theme-light .bg-zinc-950 {
+  background-color: #f7f8f2 !important;
+}
+
+html[data-theme="light"] .bg-zinc-950\/86,
+body[data-theme="light"] .bg-zinc-950\/86,
+.theme-light .bg-zinc-950\/86 {
+  background-color: rgba(250, 252, 245, 0.88) !important;
+}
+
+html[data-theme="light"] .bg-zinc-950\/80,
+html[data-theme="light"] .bg-zinc-950\/70,
+body[data-theme="light"] .bg-zinc-950\/80,
+body[data-theme="light"] .bg-zinc-950\/70,
+.theme-light .bg-zinc-950\/80,
+.theme-light .bg-zinc-950\/70 {
+  background-color: rgba(255, 255, 255, 0.78) !important;
+}
+
+html[data-theme="light"] .bg-zinc-900,
+html[data-theme="light"] .bg-zinc-900\/80,
+html[data-theme="light"] .bg-zinc-900\/76,
+html[data-theme="light"] .bg-zinc-900\/70,
+body[data-theme="light"] .bg-zinc-900,
+body[data-theme="light"] .bg-zinc-900\/80,
+body[data-theme="light"] .bg-zinc-900\/76,
+body[data-theme="light"] .bg-zinc-900\/70,
+.theme-light .bg-zinc-900,
+.theme-light .bg-zinc-900\/80,
+.theme-light .bg-zinc-900\/76,
+.theme-light .bg-zinc-900\/70 {
+  background-color: rgba(255, 255, 255, 0.78) !important;
+}
+
+html[data-theme="light"] .bg-zinc-800,
+body[data-theme="light"] .bg-zinc-800,
+.theme-light .bg-zinc-800 {
+  background-color: #e7ecdf !important;
+}
+
+html[data-theme="light"] .border-white\/10,
+body[data-theme="light"] .border-white\/10,
+.theme-light .border-white\/10 {
+  border-color: rgba(27, 43, 31, 0.12) !important;
+}
+
+html[data-theme="light"] .border-white\/20,
+body[data-theme="light"] .border-white\/20,
+.theme-light .border-white\/20 {
+  border-color: rgba(27, 43, 31, 0.2) !important;
+}
+
+html[data-theme="light"] .text-white,
+html[data-theme="light"] .text-zinc-100,
+body[data-theme="light"] .text-white,
+body[data-theme="light"] .text-zinc-100,
+.theme-light .text-white,
+.theme-light .text-zinc-100 {
+  color: #172014 !important;
+}
+
+html[data-theme="light"] .text-zinc-200,
+html[data-theme="light"] .text-zinc-300,
+body[data-theme="light"] .text-zinc-200,
+body[data-theme="light"] .text-zinc-300,
+.theme-light .text-zinc-200,
+.theme-light .text-zinc-300 {
+  color: #344232 !important;
+}
+
+html[data-theme="light"] .text-zinc-400,
+body[data-theme="light"] .text-zinc-400,
+.theme-light .text-zinc-400 {
+  color: #64705f !important;
+}
+
+html[data-theme="light"] .text-zinc-500,
+body[data-theme="light"] .text-zinc-500,
+.theme-light .text-zinc-500 {
+  color: #7b8676 !important;
+}
+
+html[data-theme="light"] .hover\:bg-white\/8:hover,
+html[data-theme="light"] .hover\:bg-white\/10:hover,
+html[data-theme="light"] .hover\:bg-white\/5:hover,
+body[data-theme="light"] .hover\:bg-white\/8:hover,
+body[data-theme="light"] .hover\:bg-white\/10:hover,
+body[data-theme="light"] .hover\:bg-white\/5:hover,
+.theme-light .hover\:bg-white\/8:hover,
+.theme-light .hover\:bg-white\/10:hover,
+.theme-light .hover\:bg-white\/5:hover {
+  background-color: rgba(27, 43, 31, 0.07) !important;
+}
+
+html[data-theme="light"] .hover\:text-white:hover,
+body[data-theme="light"] .hover\:text-white:hover,
+.theme-light .hover\:text-white:hover {
+  color: #172014 !important;
+}
+
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+body[data-theme="light"] input,
+body[data-theme="light"] select,
+.theme-light input,
+.theme-light select {
+  color: #172014;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Animações ---------- */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.5s ease both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.25s ease both;
+}
+
+/* Skeleton de carregamento de imagem */
+.skeleton {
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.skeleton::after {
+  content: "";
+  display: block;
+  height: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: shimmer 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .skeleton::after {
+    animation: none !important;
+  }
+}
