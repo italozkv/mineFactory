@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, Boxes, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import FilterBar from '../components/FilterBar.jsx';
 import ModGrid from '../components/ModGrid.jsx';
 import SearchBar from '../components/SearchBar.jsx';
@@ -9,6 +10,24 @@ import mods from '../data/mods.json';
 
 function uniqueSorted(values) {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+}
+
+function getOAuthErrorFromUrl() {
+  if (typeof window === 'undefined') return null;
+
+  const searchParams = new URLSearchParams(window.location.search);
+  const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const error = searchParams.get('error') || hashParams.get('error');
+  const errorCode = searchParams.get('error_code') || hashParams.get('error_code');
+  const errorDescription = searchParams.get('error_description') || hashParams.get('error_description');
+
+  if (!error && !errorCode && !errorDescription) return null;
+
+  return {
+    error,
+    errorCode,
+    errorDescription,
+  };
 }
 
 function Counter({ value }) {
@@ -41,6 +60,7 @@ export default function HomePage() {
   const [search, setSearch] = useState('');
   const [selectedLoader, setSelectedLoader] = useState('');
   const [selectedVersion, setSelectedVersion] = useState('');
+  const [oauthError] = useState(getOAuthErrorFromUrl);
 
   const loaders = useMemo(() => uniqueSorted(mods.flatMap((mod) => mod.loaders)), []);
   const versions = useMemo(() => uniqueSorted(mods.flatMap((mod) => mod.minecraftVersions)).reverse(), []);
@@ -65,6 +85,47 @@ export default function HomePage() {
 
   return (
     <>
+      {oauthError && (
+        <section className="content-wrap pt-6">
+          <div
+            className={`animate-fade-up rounded-lg border p-4 shadow-lg ${
+              light
+                ? 'border-rose-200 bg-rose-50 text-rose-950 shadow-rose-950/5'
+                : 'border-rose-400/25 bg-rose-500/10 text-rose-50 shadow-black/20'
+            }`}
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-base font-bold">Nao foi possivel concluir o login com Discord</h2>
+                <p className={`mt-1 text-sm ${light ? 'text-rose-800' : 'text-rose-100/80'}`}>
+                  O Discord ou Supabase retornou um erro durante a autenticacao. Tente entrar novamente pelo painel admin.
+                </p>
+                {oauthError.errorDescription && (
+                  <p className={`mt-2 text-sm ${light ? 'text-rose-700' : 'text-rose-100/70'}`}>
+                    {oauthError.errorDescription}
+                  </p>
+                )}
+                {(oauthError.error || oauthError.errorCode) && (
+                  <p className={`mt-2 text-xs ${light ? 'text-rose-700/80' : 'text-rose-100/60'}`}>
+                    Detalhes: {[oauthError.error, oauthError.errorCode].filter(Boolean).join(' / ')}
+                  </p>
+                )}
+              </div>
+              <Link
+                to="/admin/login"
+                className={`inline-flex h-10 shrink-0 items-center justify-center rounded-lg border px-4 text-sm font-semibold transition-colors ${
+                  light
+                    ? 'border-rose-200 bg-white text-rose-900 hover:border-rose-300'
+                    : 'border-rose-300/20 bg-white/10 text-white hover:bg-white/15'
+                }`}
+              >
+                Voltar para o login
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className={`relative overflow-hidden border-b ${light ? 'border-slate-200/80' : 'border-white/10'}`}>
         <div className="absolute inset-0">
           <img

@@ -5,10 +5,6 @@ import { useLanguage } from '../components/LanguageProvider.jsx';
 import { getAdminEnvStatus, getDiscordUserId, isAdminUser } from '../lib/adminAuth.js';
 import { supabase } from '../lib/supabaseClient.js';
 
-function getRedirectUrl() {
-  return new URL(`${import.meta.env.BASE_URL}admin/dashboard`, window.location.origin).toString();
-}
-
 export default function AdminLogin() {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -62,8 +58,8 @@ export default function AdminLogin() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
-        redirectTo: getRedirectUrl(),
-      },
+        redirectTo: `${window.location.origin}/admin/dashboard`
+      }
     });
 
     if (error) {

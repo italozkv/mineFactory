@@ -81,7 +81,7 @@ export default function Header() {
           </a>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto hidden items-center gap-2 md:flex">
           <LanguageSwitcher />
           <ThemeToggle />
         </div>
@@ -132,11 +132,6 @@ export default function Header() {
               </NavLink>
             );
           })}
-
-          <div className="flex items-center gap-2 px-1">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
         </div>
       </nav>
     </header>
