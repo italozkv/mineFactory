@@ -2,7 +2,7 @@ import ModCard from './ModCard.jsx';
 import { useLanguage } from './LanguageProvider.jsx';
 import { useTheme } from './ThemeProvider.jsx';
 
-export default function ModGrid({ mods }) {
+export default function ModGrid({ mods, emptyTitle, emptyCopy }) {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const light = theme === 'light';
@@ -11,10 +11,10 @@ export default function ModGrid({ mods }) {
     return (
       <div className="glass-panel animate-scale-in rounded-lg p-8 text-center">
         <h2 className={`text-xl font-semibold ${light ? 'text-slate-900' : 'text-white'}`}>
-          {t.modCard.noResultsTitle}
+          {emptyTitle || t.modCard.noResultsTitle}
         </h2>
         <p className={`mt-2 text-sm ${light ? 'text-slate-600' : 'text-zinc-400'}`}>
-          {t.modCard.noResultsCopy}
+          {emptyCopy || t.modCard.noResultsCopy}
         </p>
       </div>
     );

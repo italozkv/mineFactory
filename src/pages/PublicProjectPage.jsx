@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { StatusBadge } from '../components/admin/StatusBadge.jsx';
 import { getPublicProjectBySlug } from '../services/adminService.js';
-import { normalizeProject } from '../utils/formatters.js';
+import { projectToPublicCard } from '../utils/formatters.js';
 
 export default function PublicProjectPage() {
   const { slug } = useParams();
@@ -18,7 +18,7 @@ export default function PublicProjectPage() {
       setLoading(true);
       try {
         const data = await getPublicProjectBySlug(slug);
-        if (alive) setProject(normalizeProject(data));
+        if (alive) setProject(projectToPublicCard(data));
       } catch (loadError) {
         if (alive) setError(loadError.message || 'Projeto nao encontrado.');
       } finally {
@@ -60,11 +60,7 @@ export default function PublicProjectPage() {
             Voltar para projetos
           </Link>
           <div className="mt-5 overflow-hidden rounded-lg border border-white/10 bg-zinc-900">
-            {project.banner_url ? (
-              <img src={project.banner_url} alt={`Banner do projeto ${project.name}`} className="h-[260px] w-full object-cover sm:h-[360px]" />
-            ) : (
-              <div className="grid h-[260px] place-items-center text-zinc-600 sm:h-[360px]">Sem banner</div>
-            )}
+            <img src={project.banner} alt={`Banner do projeto ${project.name}`} className="h-[260px] w-full object-cover sm:h-[360px]" />
           </div>
         </div>
       </section>
@@ -74,11 +70,11 @@ export default function PublicProjectPage() {
           <header className="grid gap-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="grid size-20 place-items-center overflow-hidden rounded-lg border border-white/10 bg-zinc-900">
-                {project.logo_url ? <img src={project.logo_url} alt="" className="size-full object-cover" /> : project.name.slice(0, 1)}
+                {project.logo ? <img src={project.logo} alt="" className="size-full object-cover" /> : project.name.slice(0, 1)}
               </div>
               <div>
                 <h1 className="text-4xl font-black text-white sm:text-5xl">{project.name}</h1>
-                <p className="mt-2 text-lg leading-8 text-zinc-300">{project.short_description}</p>
+                <p className="mt-2 text-lg leading-8 text-zinc-300">{project.shortDescription}</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -120,7 +116,7 @@ export default function PublicProjectPage() {
               </div>
               <div>
                 <span className="text-zinc-500">Minecraft</span>
-                <p className="mt-1 text-zinc-200">{project.minecraft_versions?.join(', ') || '-'}</p>
+                <p className="mt-1 text-zinc-200">{project.minecraftVersions?.join(', ') || '-'}</p>
               </div>
               <div>
                 <span className="text-zinc-500">Loaders</span>

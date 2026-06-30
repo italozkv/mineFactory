@@ -48,3 +48,25 @@ export function normalizeProject(project) {
     tags: project?.project_tags?.map((item) => item.tags).filter(Boolean) || project?.tags || [],
   };
 }
+
+export function isArchivedProject(project) {
+  const status = String(project?.status || '').toLowerCase();
+  return Boolean(project?.archived_at) || status === 'archived' || status === 'arquivado';
+}
+
+export function projectToPublicCard(project) {
+  const normalized = normalizeProject(project);
+
+  return {
+    ...normalized,
+    id: normalized.slug || normalized.id,
+    name: normalized.title || normalized.name,
+    slug: normalized.slug,
+    shortDescription: normalized.short_description || normalized.shortDescription || '',
+    description: normalized.description || '',
+    banner: normalized.banner_url || normalized.banner || '/images/mods-hero.png',
+    logo: normalized.logo_url || normalized.logo || '/images/minefactory-logo.png',
+    minecraftVersions: normalized.minecraft_versions || normalized.minecraftVersions || [],
+    loaders: normalized.loaders || [],
+  };
+}

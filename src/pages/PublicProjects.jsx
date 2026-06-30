@@ -1,10 +1,14 @@
-import { Boxes, ExternalLink, Tag } from 'lucide-react';
+import { Boxes } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import FilterBar from '../components/FilterBar.jsx';
+import ModGrid from '../components/ModGrid.jsx';
 import SearchBar from '../components/SearchBar.jsx';
-import { LOADERS, MINECRAFT_VERSIONS } from '../constants/projects.js';
 import { listPublicProjects } from '../services/adminService.js';
-import { normalizeProject } from '../utils/formatters.js';
+import { projectToPublicCard } from '../utils/formatters.js';
+
+function uniqueSorted(values) {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+}
 
 export default function PublicProjects() {
   const [projects, setProjects] = useState([]);
@@ -21,8 +25,8 @@ export default function PublicProjects() {
       setLoading(true);
       setError('');
       try {
-        const data = await listPublicProjects({ search, loader, minecraftVersion: version });
-        if (alive) setProjects(data.map(normalizeProject));
+        const data = await listPublicProjects();
+        if (alive) setProjects(data.map(projectToPublicCard));
       } catch (loadError) {
         if (alive) setError(loadError.message || 'Nao foi possivel carregar os projetos.');
       } finally {
@@ -30,14 +34,28 @@ export default function PublicProjects() {
       }
     }
 
-    const timeout = window.setTimeout(loadProjects, 250);
+    loadProjects();
     return () => {
       alive = false;
-      window.clearTimeout(timeout);
     };
-  }, [search, loader, version]);
+  }, []);
 
-  const total = useMemo(() => projects.length, [projects]);
+  const loaders = useMemo(() => uniqueSorted(projects.flatMap((project) => project.loaders || [])), [projects]);
+  const versions = useMemo(
+    () => uniqueSorted(projects.flatMap((project) => project.minecraftVersions || [])).reverse(),
+    [projects],
+  );
+  const filteredProjects = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return projects.filter((project) => {
+      const matchesSearch = normalizedSearch.length === 0 || project.name.toLowerCase().includes(normalizedSearch);
+      const matchesLoader = loader.length === 0 || project.loaders?.includes(loader);
+      const matchesVersion = version.length === 0 || project.minecraftVersions?.includes(version);
+
+      return matchesSearch && matchesLoader && matchesVersion;
+    });
+  }, [loader, projects, search, version]);
 
   return (
     <section className="content-wrap grid gap-8 py-12">
@@ -48,92 +66,52 @@ export default function PublicProjects() {
         </div>
         <h1 className="text-4xl font-black text-white">Projetos MineFactory</h1>
         <p className="max-w-2xl text-sm leading-6 text-zinc-400">
-          Catalogo publico dos mods marcados como publicos e publicados no painel admin.
+          Catalogo publico dos mods marcados como publicos no painel admin.
         </p>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-[1fr_180px_180px]">
+      <div className="grid gap-3 lg:grid-cols-[1fr_1.35fr]">
         <SearchBar value={search} onChange={setSearch} />
-        <select
-          value={version}
-          onChange={(event) => setVersion(event.target.value)}
-          className="h-11 rounded-lg border border-white/10 bg-zinc-900/80 px-3 text-sm text-white outline-none"
-        >
-          <option value="">Minecraft</option>
-          {MINECRAFT_VERSIONS.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <select
-          value={loader}
-          onChange={(event) => setLoader(event.target.value)}
-          className="h-11 rounded-lg border border-white/10 bg-zinc-900/80 px-3 text-sm text-white outline-none"
-        >
-          <option value="">Loader</option>
-          {LOADERS.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+        <FilterBar
+          loaders={loaders}
+          versions={versions}
+          selectedLoader={loader}
+          selectedVersion={version}
+          onLoaderChange={setLoader}
+          onVersionChange={setVersion}
+          onClear={() => {
+            setLoader('');
+            setVersion('');
+          }}
+        />
       </div>
 
       {error && <div className="rounded-lg border border-rose-400/25 bg-rose-500/10 p-4 text-sm text-rose-100">{error}</div>}
 
-      <div className="text-sm text-zinc-500">{loading ? 'Carregando projetos...' : `${total} projeto(s) encontrado(s)`}</div>
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {projects.map((project) => (
-          <Link
-            key={project.id}
-            to={`/projects/${project.slug}`}
-            className="group overflow-hidden rounded-lg border border-white/10 bg-zinc-900/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40"
-          >
-            <div className="h-40 bg-zinc-950">
-              {project.banner_url ? (
-                <img src={project.banner_url} alt={project.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              ) : (
-                <div className="grid h-full place-items-center text-zinc-600">Sem banner</div>
-              )}
-            </div>
-            <div className="grid gap-4 p-5">
-              <div className="flex items-start gap-3">
-                <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/10 bg-zinc-950">
-                  {project.logo_url ? <img src={project.logo_url} alt="" className="size-full object-cover" /> : project.name.slice(0, 1)}
-                </div>
-                <div className="min-w-0">
-                  <h2 className="truncate text-lg font-bold text-white">{project.name}</h2>
-                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-zinc-400">{project.short_description}</p>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {project.category && (
-                  <span className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2.5 py-1 text-xs text-zinc-300">
-                    <Tag size={13} />
-                    {project.category.name}
-                  </span>
-                )}
-                {project.loaders?.map((item) => (
-                  <span key={item} className="rounded-lg border border-white/10 px-2.5 py-1 text-xs text-zinc-300">
-                    {item}
-                  </span>
-                ))}
-              </div>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-300">
-                Ver projeto
-                <ExternalLink size={15} />
-              </span>
-            </div>
-          </Link>
-        ))}
+      <div className="text-sm text-zinc-500">
+        {loading ? 'Carregando projetos...' : `${filteredProjects.length} projeto(s) encontrado(s)`}
       </div>
 
-      {!loading && projects.length === 0 && (
-        <div className="rounded-lg border border-white/10 bg-zinc-900/70 p-8 text-center text-zinc-400">
-          Nenhum projeto publico encontrado.
+      {loading ? (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="glass-panel overflow-hidden rounded-lg">
+              <div className="skeleton aspect-[16/9]" />
+              <div className="grid gap-4 p-4">
+                <div className="skeleton h-6 w-2/3 rounded-lg" />
+                <div className="skeleton h-10 w-full rounded-lg" />
+                <div className="skeleton h-5 w-4/5 rounded-lg" />
+                <div className="skeleton h-10 w-full rounded-lg" />
+              </div>
+            </div>
+          ))}
         </div>
+      ) : (
+        <ModGrid
+          mods={filteredProjects}
+          emptyTitle="Nenhum projeto publicado ainda"
+          emptyCopy="Quando um projeto publico for criado no painel admin, ele aparecera aqui."
+        />
       )}
     </section>
   );

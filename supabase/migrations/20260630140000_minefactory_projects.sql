@@ -111,7 +111,7 @@ with check (auth.role() = 'authenticated');
 drop policy if exists "Public can read published projects" on public.projects;
 create policy "Public can read published projects"
 on public.projects for select
-using (visibility = 'public' and is_published = true and archived_at is null);
+using (visibility = 'public' and archived_at is null and status <> 'archived');
 
 drop policy if exists "Authenticated users read all projects" on public.projects;
 create policy "Authenticated users read all projects"
@@ -133,8 +133,8 @@ using (
     from public.projects
     where projects.id = project_tags.project_id
       and projects.visibility = 'public'
-      and projects.is_published = true
       and projects.archived_at is null
+      and projects.status <> 'archived'
   )
 );
 

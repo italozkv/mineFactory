@@ -6,7 +6,8 @@ import ModGrid from '../components/ModGrid.jsx';
 import SearchBar from '../components/SearchBar.jsx';
 import { useLanguage } from '../components/LanguageProvider.jsx';
 import { useTheme } from '../components/ThemeProvider.jsx';
-import mods from '../data/mods.json';
+import { listPublicProjects } from '../services/adminService.js';
+import { projectToPublicCard } from '../utils/formatters.js';
 
 function uniqueSorted(values) {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
@@ -61,21 +62,47 @@ export default function HomePage() {
   const [selectedLoader, setSelectedLoader] = useState('');
   const [selectedVersion, setSelectedVersion] = useState('');
   const [oauthError] = useState(getOAuthErrorFromUrl);
+  const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+  const [projectsError, setProjectsError] = useState('');
 
-  const loaders = useMemo(() => uniqueSorted(mods.flatMap((mod) => mod.loaders)), []);
-  const versions = useMemo(() => uniqueSorted(mods.flatMap((mod) => mod.minecraftVersions)).reverse(), []);
+  useEffect(() => {
+    let alive = true;
+
+    async function loadProjects() {
+      setLoadingProjects(true);
+      setProjectsError('');
+      try {
+        const data = await listPublicProjects();
+        if (alive) setProjects(data.map(projectToPublicCard));
+      } catch (error) {
+        if (alive) setProjectsError(error.message || 'Nao foi possivel carregar os projetos.');
+      } finally {
+        if (alive) setLoadingProjects(false);
+      }
+    }
+
+    loadProjects();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const loaders = useMemo(() => uniqueSorted(projects.flatMap((mod) => mod.loaders || [])), [projects]);
+  const versions = useMemo(() => uniqueSorted(projects.flatMap((mod) => mod.minecraftVersions || [])).reverse(), [projects]);
 
   const filteredMods = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
-    return mods.filter((mod) => {
+    return projects.filter((mod) => {
       const matchesSearch = normalizedSearch.length === 0 || mod.name.toLowerCase().includes(normalizedSearch);
-      const matchesLoader = selectedLoader.length === 0 || mod.loaders.includes(selectedLoader);
-      const matchesVersion = selectedVersion.length === 0 || mod.minecraftVersions.includes(selectedVersion);
+      const matchesLoader = selectedLoader.length === 0 || mod.loaders?.includes(selectedLoader);
+      const matchesVersion = selectedVersion.length === 0 || mod.minecraftVersions?.includes(selectedVersion);
 
       return matchesSearch && matchesLoader && matchesVersion;
     });
-  }, [search, selectedLoader, selectedVersion]);
+  }, [projects, search, selectedLoader, selectedVersion]);
 
   function clearFilters() {
     setSearch('');
@@ -176,7 +203,7 @@ export default function HomePage() {
 
           <div className="animate-fade-up grid gap-3 sm:grid-cols-3" style={{ animationDelay: '260ms' }}>
             <div className="glass-panel rounded-lg p-4 transition-colors hover:border-emerald-400/30">
-              <Counter value={mods.length} />
+              <Counter value={projects.length} />
               <p className={`mt-1 text-sm ${light ? 'text-slate-600' : 'text-zinc-400'}`}>{t.home.stats.mods}</p>
             </div>
             <div className="glass-panel rounded-lg p-4 transition-colors hover:border-sky-400/30">
@@ -214,7 +241,7 @@ export default function HomePage() {
             <h2 className={`text-3xl font-bold ${light ? 'text-slate-950' : 'text-white'}`}>{t.home.catalogTitle}</h2>
           </div>
           <span className={`text-sm ${light ? 'text-slate-600' : 'text-zinc-400'}`}>
-            {t.home.results(filteredMods.length, mods.length)}
+            {loadingProjects ? 'Carregando projetos...' : t.home.results(filteredMods.length, projects.length)}
           </span>
         </div>
 
@@ -231,7 +258,33 @@ export default function HomePage() {
           />
         </div>
 
-        <ModGrid mods={filteredMods} />
+        {projectsError && (
+          <div className="rounded-lg border border-rose-400/25 bg-rose-500/10 p-4 text-sm text-rose-100">
+            {projectsError}
+          </div>
+        )}
+
+        {loadingProjects ? (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="glass-panel overflow-hidden rounded-lg">
+                <div className="skeleton aspect-[16/9]" />
+                <div className="grid gap-4 p-4">
+                  <div className="skeleton h-6 w-2/3 rounded-lg" />
+                  <div className="skeleton h-10 w-full rounded-lg" />
+                  <div className="skeleton h-5 w-4/5 rounded-lg" />
+                  <div className="skeleton h-10 w-full rounded-lg" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <ModGrid
+            mods={filteredMods}
+            emptyTitle="Nenhum projeto publicado ainda"
+            emptyCopy="Quando um projeto publico for criado no painel admin, ele aparecera aqui."
+          />
+        )}
       </section>
     </>
   );

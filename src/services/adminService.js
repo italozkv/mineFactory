@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient.js';
 import { DEFAULT_PROJECT_FORM } from '../constants/projects.js';
-import { slugify } from '../utils/formatters.js';
+import { isArchivedProject, slugify } from '../utils/formatters.js';
 
 const PROJECT_SELECT = `
   *,
@@ -320,8 +320,6 @@ export async function listPublicProjects(filters = {}) {
     .from('projects')
     .select(PROJECT_SELECT)
     .eq('visibility', 'public')
-    .eq('is_published', true)
-    .is('archived_at', null)
     .order('updated_at', { ascending: false });
 
   if (filters.search) query = query.ilike('name', `%${filters.search}%`);
@@ -330,7 +328,7 @@ export async function listPublicProjects(filters = {}) {
 
   const { data, error } = await query;
   if (error) throw error;
-  return data || [];
+  return (data || []).filter((project) => !isArchivedProject(project));
 }
 
 export async function getPublicProjectBySlug(slug) {
@@ -339,10 +337,11 @@ export async function getPublicProjectBySlug(slug) {
     .select(PROJECT_SELECT)
     .eq('slug', slug)
     .eq('visibility', 'public')
-    .eq('is_published', true)
-    .is('archived_at', null)
     .single();
 
   if (error) throw error;
+  if (isArchivedProject(data)) {
+    throw new Error('Projeto nao encontrado.');
+  }
   return data;
 }

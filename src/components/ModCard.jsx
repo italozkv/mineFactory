@@ -22,7 +22,7 @@ export default function ModCard({ mod, style }) {
       <div className={`relative aspect-[16/9] overflow-hidden ${light ? 'bg-slate-200' : 'bg-zinc-800'}`}>
         {!loaded && <div className="skeleton absolute inset-0" />}
         <img
-          src={mod.banner}
+          src={mod.banner || '/images/mods-hero.png'}
           alt={`Banner do mod ${mod.name}`}
           className={`h-full w-full object-cover transition-opacity duration-500 group-hover:scale-105 ${
             loaded ? 'opacity-100' : 'opacity-0'
@@ -51,16 +51,16 @@ export default function ModCard({ mod, style }) {
         <div className={`grid gap-2 text-sm ${light ? 'text-slate-700' : 'text-zinc-300'}`}>
           <span className="flex items-center gap-2">
             <Layers size={16} className={light ? 'text-sky-600' : 'text-sky-300'} />
-            Minecraft {mod.minecraftVersions.join(', ')}
+            Minecraft {mod.minecraftVersions?.join(', ') || '-'}
           </span>
           <span className="flex items-center gap-2">
             <Cpu size={16} className={light ? 'text-emerald-600' : 'text-emerald-300'} />
-            {mod.loaders.join(', ')}
+            {mod.loaders?.join(', ') || '-'}
           </span>
         </div>
 
         <Link
-          to={`/mods/${mod.id}`}
+          to={`/projects/${mod.slug || mod.id}`}
           className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-zinc-950 transition-all duration-200 hover:bg-emerald-400 hover:gap-3 active:scale-[0.98]"
         >
           {t.modCard.view}

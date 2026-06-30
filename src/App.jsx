@@ -4,7 +4,6 @@ import Header from './components/Header.jsx';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute.jsx';
 import { ToastProvider } from './components/admin/ToastProvider.jsx';
 import HomePage from './pages/HomePage.jsx';
-import ModPage from './pages/ModPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import { useTheme } from './components/ThemeProvider.jsx';
 import AdminLogin from './pages/AdminLogin.jsx';
@@ -38,7 +37,7 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/mods/:id" element={<ModPage />} />
+            <Route path="/mods/:slug" element={<PublicProjectPage />} />
             <Route path="/projects" element={<PublicProjects />} />
             <Route path="/projects/:slug" element={<PublicProjectPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
